@@ -17,19 +17,22 @@ NEWSPIDER_MODULE = 'pacong.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
-FEED_URI = u'file:///E:/douban.csv' #is uri not is url
-FEED_FORMAT = 'CSV'
+# FEED_URI = u'file:///E:/douban.csv' #is uri not is url
+# FEED_FORMAT = 'CSV'
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
 #}
-
+MONGODB_HOST='localhost'
+MONGODB_PORT = 27017
+MONGODB_DBNAME ='test'
+MONGODB_DOCNAME='movie'
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'pacong.middlewares.PacongSpiderMiddleware': 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#    'pacong.pipelines.PacongPipeline': 543,
+# }
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
@@ -45,9 +48,9 @@ FEED_FORMAT = 'CSV'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'pacong.pipelines.PacongPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'pacong.pipelines.PacongPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
