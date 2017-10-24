@@ -13,7 +13,9 @@ BOT_NAME = 'pacong'
 
 SPIDER_MODULES = ['pacong.spiders']
 NEWSPIDER_MODULE = 'pacong.spiders'
-
+DOWNLOAD_DELAY = 0.25   #设置下载间隔为250ms
+REDIRECT_ENABLED = True #true为不禁止重定向，false禁止
+COOKIES_ENABLED = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
@@ -26,8 +28,9 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, lik
 #}
 MONGODB_HOST='localhost'
 MONGODB_PORT = 27017
-MONGODB_DBNAME ='test'
-MONGODB_DOCNAME='movie'
+MONGODB_DBNAME ='dytd'
+MONGODB_DOCNAME='movies'
+
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
