@@ -30,13 +30,42 @@ class ZhihuItem(Item):
     answer = Field()  #抓取问题的答案
     name = Field()  #个人用户的名称
 
-class MovieHome(Item):
+#最新电影
+class MovieNews(Item):
     movie_name = Field() #电影名字
     movie_time = Field() #收录时间
-    movie_actors = Field() #演员
-    movie_direct = Field() #导演
     movie_image = Field() #电影图片
     movie_abstract = Field() #电影简介
     movie_download = Field() #电影下载地址
 
+#经典电影
+class MovieJd(Item):
+    movie_name = Field() #电影名字
+    movie_time = Field() #收录时间
+    movie_image = Field() #电影图片
+    movie_abstract = Field() #电影简介
+    movie_download = Field() #电影下载地址
 
+#中国电影
+class MovieChina(Item):
+    movie_name = Field()  # 电影名字
+    movie_time = Field()  # 收录时间
+    movie_image = Field()  # 电影图片
+    movie_abstract = Field()  # 电影简介
+    movie_download = Field()  # 电影下载地址
+
+#欧美电影
+class MovieOuMei(Item):
+    movie_name = Field()  # 电影名字
+    movie_time = Field()  # 收录时间
+    movie_image = Field()  # 电影图片
+    movie_abstract = Field()  # 电影简介
+    movie_download = Field()  # 电影下载地址
+
+#日韩电影
+class MovieRiHan(Item):
+    movie_name = Field()  # 电影名字
+    movie_time = Field()  # 收录时间
+    movie_image = Field()  # 电影图片
+    movie_abstract = Field()  # 电影简介
+    movie_download = Field()  # 电影下载地址

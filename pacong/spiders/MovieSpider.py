@@ -2,62 +2,100 @@
 import scrapy
 
 from scrapy import Selector
-from pacong.items import MovieHome
 from scrapy import Request
+from pacong.items import MovieNews, MovieChina, MovieOuMei, MovieRiHan;
+
 
 class DmozSpider(scrapy.Spider):
-
     name = "movie"
-
     start_urls = [
-        "http://www.dytt8.net/"
+        "http://www.dytt8.net"
     ]
-    url = "http://www.dytt8.net/"
+    url = "http://www.dytt8.net"
+    xq_url = "http://www.ygdy8.net"
 
     def parse(self, response):
-        movies = MovieHome()
         selector = Selector(response)
-        sMovies = selector.xpath('//tr') #//根节点 [@]提取属性内容
-        for movie in sMovies:
-            tds = movie.xpath('td')
-            if len(tds) == 2:
-                # title = tds[0].xpath('a/text()').extract()
-                href = tds[0].xpath('a/@href').extract()
-                # if title and len(title)>1:
-                #     title = title[1]
-                # time = tds[1].xpath('font/text()').extract()
-                # movies['name'] = title
-                # movies['time'] = time[0] #time是list,转字符串
-                # yield movies
+        typeul = selector.xpath('//ul')
+        types = typeul.xpath('li')
+        for index, t in enumerate(types):
+            href = t.xpath('a/@href').extract()
+            title = t.xpath('a/text()').extract()
+            if index < 5:
+                href = href[0]
+                title = title[0]
 
-                if href:
-                    print href[1]
-                    # yield Request(self.url+href, callback=self.parseDetail)
+                if 'http://' in href:
+                    if href == "http://www.ygdy8.net/html/gndy/index.html":
+                        pass
+                    else:
+                        yield Request(href, callback=self.parseItems, meta={'title': title,'url':href})
+                else:
+                    yield Request(self.xq_url + href, callback=self.parseItems, meta={'title': title,'url':self.xq_url+href})
 
+    def parseItems(self, response):
 
-    def parseDetail(self, response):
-        movies = MovieHome()
+        title = response.meta['title']
+        url = response.meta['url']
+
         selector = Selector(response)
+        movies = selector.xpath('//div[@class="co_content8"]')
+        mov = movies.xpath('ul/td/table')  # 审查元素和直接看网页源代码不一样，，，审查元素没有td标签，艹。
+        for movie in mov:
+            name = movie.xpath('tr/td/b/a/text()').extract()
+            href = movie.xpath('tr/td/b/a/@href').extract()
+            time = movie.xpath('tr/td/font/text()').extract()
+            zonghe = movie.xpath('tr/td[@colspan="2"]/text()').extract()
 
-        # for eachMovie in sMovies:
-        #     title = eachMovie.xpath('td/a/span/text()').extract()
-        #     time  = eachMovie.xpath('td/a/span/text()').extract()
-        #     print title
-        #     print time
-            # for each in title:
-            #     fulltitle += each
-            # movieInfo = eachMovie.xpath('div[@class = "bd"]/p/text()').extract()
-            # star = eachMovie.xpath('div[@class = "bd"]/div[@class = "star"]/span[@class = "rating_num"]/text()').extract()[0]
-            # quote = eachMovie.xpath('div[@class = "bd"]/p[@class = "quote"]/span/text()').extract()
-            # if quote: #判断quote是否为空
-            #     quote = quote[0]
-            # else:
-            #     quote = ''
+            name = name[len(name)-1]
+            href = href[len(href)-1]
+            time = time[0]
+            zonghe = zonghe[0]
+            yield Request(self.xq_url + href, callback=self.parseDetail, meta={'name': name, "time": time, 'title': title, 'zonghe': zonghe})
 
-            # movies['time'] =
+    def parseDetail(self,response):
+        selector = Selector(response)
+        zoom = selector.xpath('//div[@id="Zoom"]')
+        imgs = zoom.xpath('td/img/@src').extract()
+        img = ','.join(imgs)
+        downloadUrl = zoom.xpath('td/table/tbody/tr/td/a/text()').extract()
 
-        # nextLink = selector.xpath('//span[@class = "next"]/a/@href').extract()
-        # if nextLink:
-        #     nextLink = nextLink[0]
-        #     print nextLink
-        #     yield Request(self.url + nextLink, callback=self.parse)
+        title = response.meta['title']
+        name = response.meta['name']
+        time = response.meta['time']
+        zonghe = response.meta['zonghe']
+        if downloadUrl:
+            downloadUrl = downloadUrl[0]
+
+        if title == u"最新影片":
+            movieNews = MovieNews()
+            movieNews['movie_name'] = name
+            movieNews['movie_time'] = time
+            movieNews['movie_image'] = img
+            movieNews['movie_abstract'] = zonghe
+            movieNews['movie_download'] = downloadUrl
+            yield movieNews
+        elif title == u"其它电影":
+            movieRh = MovieRiHan()
+            movieRh['movie_name'] = name
+            movieRh['movie_time'] = time
+            movieRh['movie_image'] = img
+            movieRh['movie_abstract'] = zonghe
+            movieRh['movie_download'] = downloadUrl
+            yield movieRh
+        elif title == u"欧美电影":
+            movieOm = MovieOuMei()
+            movieOm['movie_name'] = name
+            movieOm['movie_time'] = time
+            movieOm['movie_image'] = img
+            movieOm['movie_abstract'] = zonghe
+            movieOm['movie_download'] = downloadUrl
+            yield movieOm
+        elif title == u"国内电影":
+            movieCh = MovieChina()
+            movieCh['movie_name'] = name
+            movieCh['movie_time'] = time
+            movieCh['movie_image'] = img
+            movieCh['movie_abstract'] = zonghe
+            movieCh['movie_download'] = downloadUrl
+            yield movieCh

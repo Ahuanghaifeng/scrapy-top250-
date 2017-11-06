@@ -13,19 +13,20 @@ BOT_NAME = 'pacong'
 
 SPIDER_MODULES = ['pacong.spiders']
 NEWSPIDER_MODULE = 'pacong.spiders'
-DOWNLOAD_DELAY = 0.25   #设置下载间隔为250ms
+DOWNLOAD_DELAY = 0.8   #设置下载间隔为250ms
 REDIRECT_ENABLED = True #true为不禁止重定向，false禁止
 COOKIES_ENABLED = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+
 # FEED_URI = u'file:///E:/douban.csv' #is uri not is url
 # FEED_FORMAT = 'CSV'
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'en',
+}
 MONGODB_HOST='localhost'
 MONGODB_PORT = 27017
 MONGODB_DBNAME ='dytd'
