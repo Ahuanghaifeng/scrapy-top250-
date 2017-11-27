@@ -36,9 +36,17 @@ class DmozSpider(scrapy.Spider):
     def parseItems(self, response):
 
         title = response.meta['title']
-        url = response.meta['url']
+        urll = response.meta['url']
 
         selector = Selector(response)
+
+        nextHrefs = selector.xpath('//select[@name="sldd"]')
+        # for next in nextHrefs:
+        hrefs = nextHrefs.xpath('option/@value').extract()
+        for href in hrefs:
+            nextUrl = urll[0:urll.rindex('/') + 1] + href
+            yield Request(nextUrl, callback=self.parseItems, meta={'title': title, 'url': nextUrl})
+
         movies = selector.xpath('//div[@class="co_content8"]')
         mov = movies.xpath('ul/td/table')  # 审查元素和直接看网页源代码不一样，，，审查元素没有td标签，艹。
         for movie in mov:
